@@ -7,10 +7,10 @@ l_rate = 1;
 [dim, num_inputs] = size(xor);
 %setting seed to 0 to ensure reproducibility
 rng('default')
-s = rng
+s = rng;
 
 weights = rand(1, dim-1);
-count = 1
+count = 1;
 
 classified = false;
 

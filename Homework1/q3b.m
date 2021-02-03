@@ -12,10 +12,10 @@ l_rate = 0.1;
 [dim, num_inputs] = size(func);
 %setting seed to 0 to ensure reproducibility
 rng('default')
-s = rng
+s = rng;
 
 weights = rand(1, dim-1);
-count = 1
+count = 1;
 
 classified = false;
 
