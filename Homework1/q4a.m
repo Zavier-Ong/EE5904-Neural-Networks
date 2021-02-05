@@ -8,11 +8,12 @@ d = [8.0; 6.0; 5; 2; 0.5];
 w = (x'*x) \ x' *d;
 y = x*w;
 
-figure;
+fig1 = figure;
 xlabel('x');
 ylabel('y');
 title("Fitting result of LLS");
 hold on;
 scatter(x(:,2), d, 'filled')
 p = plot(x(:,2), y);
-
+disp(w);
+%saveas(fig1, 'q4a.png');

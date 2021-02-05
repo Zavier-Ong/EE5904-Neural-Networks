@@ -7,7 +7,7 @@ nand = [1 1 1 1; 0 0 1 1; 0 1 0 1; 1 1 1 0];
 complement = [1 1; 0 1; 1 0];
 
 
-func = complement;
+func = or;
 l_rate = 0.1;
 [dim, num_inputs] = size(func);
 %setting seed to 0 to ensure reproducibility
@@ -33,7 +33,7 @@ while ~(classified)
 end
 
 if dim-1 == 2 %handling complement case
-    figure;
+    fig1 = figure;
     title('Trajectory of weights');
     hold on;
     xlabel("Iteration count");
@@ -43,8 +43,9 @@ if dim-1 == 2 %handling complement case
     legend({'w0', 'w1'});
     grid on;
     hold off;
+    saveas(fig1, sprintf('COMP_%.1f.png', l_rate));
     
-    figure;
+    fig2 = figure;
     title('Decision Boundary (Learning procedure vs off-line calculations)')
     hold on;
     xlim([0,2])
@@ -66,10 +67,11 @@ if dim-1 == 2 %handling complement case
     ylabel("x2");
     grid on
     hold off
+    saveas(fig2, sprintf('COMP_db_%.1f.png', l_rate));
 end        
 
 if dim-1 == 3
-    figure;
+    fig1 = figure;
     title('Trajectory of weights');
     hold on;
     xlabel("Iteration count");
@@ -80,9 +82,10 @@ if dim-1 == 3
     legend({'w0','w1','w2'});
     grid on
     hold off
+    saveas(fig1, sprintf('OR_%.1f.png', l_rate));
     
-    figure;
-    title('Decision Boundary (Learning procedure vs off-line calculations)')
+    fig2 = figure;
+    title('Decision Boundary (Learning procedure vs \color{red}off-line calculations\color{black})')
     hold on;
     x = -10:100;
     m = -weights(end,2)/weights(end,3);
@@ -104,9 +107,10 @@ if dim-1 == 3
     y_off_and = -x + 1.5;
     y_off_or = -x + 0.5;
     y_off_nand = -x + 1.5;
-    plot(x, y_off_nand, 'r');
+    plot(x, y_off_or, 'r');
     xlabel("x1");
     ylabel("x2");
     grid on
     hold off
+    saveas(fig2, sprintf('OR_db_%.1f.png', l_rate));
 end

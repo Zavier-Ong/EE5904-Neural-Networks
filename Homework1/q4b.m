@@ -8,9 +8,10 @@ s = rng;
 
 weights = randn(1, 2);
 trajectory = weights;
-l_rate = 0.001;
+l_rate = 0.002;
+total_epochs = 2000;
 
-for epoch = 1:100
+for epoch = 1:total_epochs
     for i = 1:length(x(:,1))
         if (x(i, 1:2)*weights') == d(i)
             continue
@@ -22,19 +23,30 @@ for epoch = 1:100
     end
 end
 
-y = x*weights';
+y_lms = x*weights';
+w = (x'*x) \ x' *d';
+y_lls = x*w;
+disp(weights);
 
-figure
-hold on 
-scatter(x(:, 2), d, 'filled')
-plot(x(:, 2), y);
-hold off
+fig1 = figure;
+title('Fitting result (LMS vs \color{red}LLS\color{black})');
+%title('Fitting result of LMS');
+xlabel('x');
+ylabel('y');
+hold on;
+scatter(x(:, 2), d, 'filled');
+plot(x(:, 2), y_lms, 'k');
+plot(x(:,2), y_lls, 'r');
+hold off;
+saveas(fig1, sprintf('4d_fit_%.3f_%d.png', l_rate, total_epochs));
 
-figure
-hold on 
+fig2 = figure;
+hold on;
+title('Trajectory of weights');
 xlabel("Learning Steps");
 ylabel("Weights");
 plot(0:length(trajectory)-1,trajectory(:,1))
 plot(0:length(trajectory)-1,trajectory(:,2))
 legend({'w0','w1'})
-hold off
+hold off;
+saveas(fig2, sprintf('4d_traj_%.3f_%d.png', l_rate, total_epochs));

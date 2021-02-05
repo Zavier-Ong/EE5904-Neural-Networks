@@ -27,7 +27,7 @@ while ~(classified)
     end
 end       
 
-figure;
+fig1 = figure;
 title('Trajectory of weights');
 hold on;
 xlabel("Iteration count");
@@ -38,6 +38,7 @@ plot(weights(1:size(weights,1),3));
 legend({'w0','w1','w2'});
 grid on
 hold off
+saveas(fig1, "xor.png");
     
 figure;
 title('Decision Boundary (Learning procedure vs off-line calculations)')
