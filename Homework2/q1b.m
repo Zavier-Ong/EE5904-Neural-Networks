@@ -30,6 +30,7 @@ end
 
 num_iter = [0:iteration];
 % plot
+fig = figure();
 subplot(3, 1, 1);
 hold on;
 yyaxis left;
@@ -49,5 +50,5 @@ subplot(3, 1, 3)
 plot(all_xy(:,1), all_xy(:, 2));
 ylabel('Y');
 xlabel('X');
-
+saveas(fig,sprintf('q1_images/newton.png'));
     
