@@ -9,14 +9,17 @@ cost = (1-x)^2 + 100*(y-x^2)^2;
 max_epoch = 100000;
 all_cost = [cost];
 all_xy = [x,y;];
-iteration = 1;
+iteration = 0;
 eta = 0.001; %learing_rate
 threshold = 1e-5;
 
 for epoch = 1:max_epoch
+    iteration = iteration+1;
     %gradient descent
-    x = x - eta*(2*(x-1) + 400*x*(x^2 -y));
-    y = y - eta*(200*(y-x^2));
+    old_x = x;
+    old_y = y;
+    x = old_x - eta*(2*(old_x-1) + 400*old_x*(old_x^2 -old_y));
+    y = old_y - eta*(200*(old_y-old_x^2));
     cost = (1-x)^2 + 100*(y-x^2)^2;
     
     all_cost = [all_cost; cost];
@@ -24,10 +27,10 @@ for epoch = 1:max_epoch
     if (cost < threshold)
         break;
     end
-    iteration = iteration+1;
 end
 
-num_iter = [0:iteration];
+num_iter = [1:iteration+1];
+fprintf("Q1a. Number of iterations: %d\n", length(num_iter));
 % plot
 fig = figure();
 subplot(3, 1, 1);
@@ -49,4 +52,4 @@ subplot(3, 1, 3)
 plot(all_xy(:,1), all_xy(:, 2));
 ylabel('Y');
 xlabel('X');
-saveas(fig,sprintf('q1_images/steepest_descent.png'));
+%saveas(fig,sprintf('q1_images/steepest_descent.png'));

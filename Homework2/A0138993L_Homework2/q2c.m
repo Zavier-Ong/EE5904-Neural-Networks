@@ -54,5 +54,6 @@ function net = train_batch( n, images, labels)
     
     % 2. Construct and configure the MLP
     net = feedforwardnet(n, 'trainbr');
+    net.trainParam.lr = 0.01;
     net = train(net, images_c, labels_c);
 end

@@ -9,10 +9,11 @@ cost = (1-x)^2 + 100*(y-x^2)^2;
 max_epoch = 100000;
 all_cost = [cost];
 all_xy = [x,y;];
-iteration = 1;
+iteration = 0;
 threshold = 1e-5;
 
 for epoch = 1:max_epoch
+    iteration = iteration+1;
     g = [(2*(x-1)+400*x*(x^2 -y)); (200*(y-x^2))];
     H = [(1200*x^2-400*y+2), (-400*x); (-400*x), 200];
     w = [x;y]- H\g; %inv(H)*g = H\g
@@ -25,10 +26,10 @@ for epoch = 1:max_epoch
     if (cost < threshold)
         break;
     end
-    iteration = iteration+1;
 end
 
-num_iter = [0:iteration];
+num_iter = [1:iteration+1];
+fprintf("Q1a. Number of iterations: %d\n", length(num_iter));
 % plot
 fig = figure();
 subplot(3, 1, 1);
