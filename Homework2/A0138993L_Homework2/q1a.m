@@ -52,4 +52,4 @@ subplot(3, 1, 3)
 plot(all_xy(:,1), all_xy(:, 2));
 ylabel('Y');
 xlabel('X');
-%saveas(fig,sprintf('q1_images/steepest_descent.png'));
+saveas(fig,sprintf('q1_images/steepest_descent.png'));
