@@ -11,26 +11,37 @@ train_y = 1.2*sin(pi*train_x) - cos(2.4*pi*train_x) + 0.3*randn(1, size(train_x,
 test_x = -1:0.01:1;
 test_y = 1.2*sin(pi*test_x) - cos(2.4*pi*test_x);
 
+% randomly select 20 centers
+m = 20;
+center_idx = randperm(size(train_x, 2));
+mew_x = train_x(center_idx(1:20));
+mew_y = train_y(center_idx(1:20));
+
 % exact interpolation on train
 % no need to square or sqrt since x has only 1 value
-r = abs(train_x'-train_x);
-% gaussian rbf
-phi = exp( (r.^2) / (-2*((0.1)^2)) );
-w = phi \ train_y';
+r = abs(mew_x'-mew_x);
+% maximum dist between chosen centers
+dmax = max(r, [], 'all');
+% rbf
+phi = exp( -(m/dmax^2) * r.^2 );
+w = phi \ mew_y';
 
 %predict y
-r_test = abs(test_x' - train_x);
-phi = exp( (r_test.^2) / (-2*((0.1)^2)) );
+r_test = abs(test_x' - mew_x);
+% maximum dist between chosen centers
+dmax = max(r_test, [], 'all');
+% rbf
+phi = exp( -(m/dmax^2) * r_test.^2 );
 y_predict = (phi*w)';
 
 fig = figure();
 hold on
-plot(train_x,train_y,'ok')
+plot(mew_x,mew_y,'ok')
 plot(test_x,y_predict, 'r')
 plot(test_x,test_y, 'b')
 legend('Train points (with noise)','RBFN','Expected', 'Location', 'Best')
-title('Exact Interpolation')
-saveas(fig, 'q1a.png')
+title('Fixed Centres Selected at Random')
+saveas(fig, 'q1b.png')
 hold off
 
 %MSE of test
