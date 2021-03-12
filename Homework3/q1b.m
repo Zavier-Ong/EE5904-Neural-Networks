@@ -14,8 +14,8 @@ test_y = 1.2*sin(pi*test_x) - cos(2.4*pi*test_x);
 % randomly select 20 centers
 m = 20;
 center_idx = randperm(size(train_x, 2));
-mew_x = train_x(center_idx(1:20));
-mew_y = train_y(center_idx(1:20));
+mew_x = train_x(center_idx(1:m));
+mew_y = train_y(center_idx(1:m));
 
 % exact interpolation on train
 % no need to square or sqrt since x has only 1 value
@@ -28,8 +28,6 @@ w = phi \ mew_y';
 
 %predict y
 r_test = abs(test_x' - mew_x);
-% maximum dist between chosen centers
-dmax = max(r_test, [], 'all');
 % rbf
 phi = exp( -(m/dmax^2) * r_test.^2 );
 y_predict = (phi*w)';

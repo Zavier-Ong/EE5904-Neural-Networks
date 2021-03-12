@@ -26,30 +26,32 @@ test_x = test_data(test_idx, :);
 % casting to double to remove warning when normalizing data
 test_x = cast(test_x/255, 'double');
 
-r_factors = [0, 0.0001, 0.001, 0.01, 0.1, 1, 10, 100];
-sd= 100;
-for i = r_factors
-    % exact interpolation on train
-    lambda = i;
-    r_train = pdist2(train_x, train_x, 'squaredeuclidean');
-    % gaussian rbf
-    phi = exp( r_train / (-2*((sd)^2)) );
-    % applying regularization method to determine new weights
-    if (i == 0)
-        w = phi \ TrLabel;
-    else
-        w = ((phi'*phi) + lambda*eye(size(phi, 2))) \ (phi'*TrLabel);
-    end
+% randomly select 100 centers
+m = 100;
+% seed for reproducibility
+rng(3)
+center_idx = randperm(size(train_x, 1));
+train_x = train_x(center_idx(1:m), :);
+TrLabel = TrLabel(center_idx(1:m), :);
+
+r_train = pdist2(train_x, train_x, 'squaredeuclidean');
+dmax_squared = max(r_train, [], 'all');
+sigma = sqrt(dmax_squared/(2*m));
+
+vary_width = [sigma, 0.1, 1, 10, 100, 1000, 10000];
+for i = vary_width
+    width = i;
+    phi = exp( -(r_train / (2*(width^2))) );
+    w = phi \ TrLabel;
     
-    % TrPred
-    TrPred = (phi*w)';
+    %TrPred
+    TrPred = (phi*w);
     
     %TePred
     r_test = pdist2(test_x, train_x, 'squaredeuclidean');
-    %gaussian rbf
-    phi = exp( r_test / (-2*((sd)^2)) );
-    TePred = (phi*w)';
-
+    phi = exp ( -(r_test / (2*(width^2))) );
+    TePred = (phi*w);
+    
     fig = figure();
     TrAcc = zeros(1,1000);
     TeAcc = zeros(1,1000);
@@ -66,7 +68,8 @@ for i = r_factors
     plot(thr, TrAcc, '-^r');
     plot(thr, TeAcc, '-xb');
     legend('Train','Test');
-    title(sprintf('Exact Interpolation (lambda=%.4f)', i))
-    saveas(fig,sprintf('q2a_lambda_%.4f.png',i))
+    title(sprintf('Fixed Centers Selected at Random (lambda=%.3f)', i))
+    saveas(fig,sprintf('q2b_lambda_%.3f.png',i))
     hold off
 end
+    
