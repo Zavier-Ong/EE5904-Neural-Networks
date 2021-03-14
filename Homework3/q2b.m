@@ -15,7 +15,7 @@ TrLabel(TrLabel == 3) = 0;
 
 train_x = train_data(train_idx, :);
 % casting to double to remove warning when normalizing data
-train_x = cast(train_x/255, 'double');
+train_x = mat2gray(train_x(:,:));
 
 test_idx = find(test_label == 3 | test_label == 9);
 TeLabel = test_label(test_idx);
@@ -24,18 +24,19 @@ TeLabel(TeLabel == 3) = 0;
 
 test_x = test_data(test_idx, :);
 % casting to double to remove warning when normalizing data
-test_x = cast(test_x/255, 'double');
+test_x = mat2gray(test_x(:,:));
 
 % randomly select 100 centers
 m = 100;
 % seed for reproducibility
 rng(3)
 center_idx = randperm(size(train_x, 1));
-train_x = train_x(center_idx(1:m), :);
-TrLabel = TrLabel(center_idx(1:m), :);
+selected_train_x = train_x(center_idx(1:m), :);
+selected_TrLabel = TrLabel(center_idx(1:m), :);
 
-r_train = pdist2(train_x, train_x, 'squaredeuclidean');
-dmax_squared = max(r_train, [], 'all');
+r_train = pdist2(train_x, selected_train_x, 'squaredeuclidean');
+dist_cen = pdist2(selected_train_x, selected_train_x, 'squaredeuclidean');
+dmax_squared = max(dist_cen, [], 'all');
 sigma = sqrt(dmax_squared/(2*m));
 
 vary_width = [sigma, 0.1, 1, 10, 100, 1000, 10000];
@@ -48,7 +49,7 @@ for i = vary_width
     TrPred = (phi*w);
     
     %TePred
-    r_test = pdist2(test_x, train_x, 'squaredeuclidean');
+    r_test = pdist2(test_x, selected_train_x, 'squaredeuclidean');
     phi = exp ( -(r_test / (2*(width^2))) );
     TePred = (phi*w);
     

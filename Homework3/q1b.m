@@ -17,14 +17,14 @@ center_idx = randperm(size(train_x, 2));
 mew_x = train_x(center_idx(1:m));
 mew_y = train_y(center_idx(1:m));
 
-% exact interpolation on train
 % no need to square or sqrt since x has only 1 value
-r = abs(mew_x'-mew_x);
+r = abs(train_x'-mew_x);
+dist_cen = abs(mew_x'-mew_x);
 % maximum dist between chosen centers
-dmax = max(r, [], 'all');
+dmax = max(dist_cen, [], 'all');
 % rbf
 phi = exp( -(m/dmax^2) * r.^2 );
-w = phi \ mew_y';
+w = phi \ train_y';
 
 %predict y
 r_test = abs(test_x' - mew_x);

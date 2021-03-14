@@ -11,7 +11,7 @@ train_y = 1.2*sin(pi*train_x) - cos(2.4*pi*train_x) + 0.3*randn(1, size(train_x,
 test_x = -1:0.01:1;
 test_y = 1.2*sin(pi*test_x) - cos(2.4*pi*test_x);
 
-r_factors = [0, 0.001, 0.01, 0.1, 1, 10, 100]
+r_factors = [0, 0.001, 0.01, 0.1, 1, 10, 100];
 for i = r_factors
     % exact interpolation on train
     % no need to square or sqrt since x has only 1 value

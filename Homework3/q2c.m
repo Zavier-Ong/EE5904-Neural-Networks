@@ -15,7 +15,7 @@ TrLabel(TrLabel == 3) = 0;
 
 train_x = train_data(train_idx, :);
 % casting to double to remove warning when normalizing data
-train_x = cast(train_x/255, 'double');
+train_x = mat2gray(train_x(:,:));
 
 test_idx = find(test_label == 3 | test_label == 9);
 TeLabel = test_label(test_idx);
@@ -24,7 +24,7 @@ TeLabel(TeLabel == 3) = 0;
 
 test_x = test_data(test_idx, :);
 % casting to double to remove warning when normalizing data
-test_x = cast(test_x/255, 'double');
+test_x = mat2gray(test_x(:,:));
 
 rng(3);
 k = 2;
