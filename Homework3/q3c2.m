@@ -71,6 +71,7 @@ for i = 1:size(test_x, 2)
     TePred(i, 1) = marked_neuron(row, col);
 end
 
-TeAcc = sum(TePred == TeLabel)/size(test_x, 2)
+TeAcc = sum(TePred == TeLabel)/size(test_x, 2);
+fprintf('Classification accuracy on test set: %.4f\n', TeAcc);
     
     
