@@ -62,12 +62,13 @@ end
 TePred = zeros(size(TeLabel, 1), 1);
 for i = 1:size(test_x, 2)
     distance = squeeze(sum((test_x(:,i)-weights).^2, 1))';
-    [min_val, win_idx] = min(distance, [], 'all', 'linear');
+    [~, win_idx] = min(distance, [], 'all', 'linear');
     row = ceil(win_idx/10);
     col = mod(win_idx,10);
-    if col == 0
-        col = 10;
-    end
+     if col == 0
+         col = 10;
+     end
+    %[row, col] = ind2sub(size(distance), win_idx);
     TePred(i, 1) = marked_neuron(row, col);
 end
 
