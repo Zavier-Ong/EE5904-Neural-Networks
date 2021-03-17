@@ -2,20 +2,21 @@ clc
 clear
 close all
 % Matric A0138993L
-% Classes chosen: 9 and 3
+% Classes not chosen: 9 and 3
 load('characters10.mat');
+
+%set seed for reproducibility
 rng(234);
-%imshow(reshape(train_data(2997,:), [28,28]));
 train_idx = find(train_label ~= 3 & train_label ~= 9);
 TrLabel = train_label(train_idx);
 train_x = train_data(train_idx, :);
-% casting to double to remove warning when normalizing data
+% normalizing train data
 train_x = mat2gray(train_x(:,:))';
 
 test_idx = find(test_label ~= 3 & test_label ~= 9);
 TeLabel = test_label(test_idx);
 test_x = test_data(test_idx, :);
-% casting to double to remove warning when normalizing data
+% normalizing test data
 test_x = mat2gray(test_x(:,:))';
 
 T = 1000;
@@ -32,11 +33,7 @@ for n = 1:T
     %determine winner
     distance = squeeze(sum((train_x(:,i) - weights).^2,1))';
     [~,winner] = min(distance,[],'all','linear');
-    row = ceil(winner/10);
-    col = mod(winner,10);
-    if col == 0
-        col = 10;
-    end
+    [col, row] = ind2sub(size(distance), winner);
     %get time-carying neighborhood function
     neuron_position = (1:10);
     d_j = (neuron_position - col).^2;
@@ -63,12 +60,7 @@ TePred = zeros(size(TeLabel, 1), 1);
 for i = 1:size(test_x, 2)
     distance = squeeze(sum((test_x(:,i)-weights).^2, 1))';
     [~, win_idx] = min(distance, [], 'all', 'linear');
-    row = ceil(win_idx/10);
-    col = mod(win_idx,10);
-     if col == 0
-         col = 10;
-     end
-    %[row, col] = ind2sub(size(distance), win_idx);
+    [col, row] = ind2sub(size(distance), win_idx);
     TePred(i, 1) = marked_neuron(row, col);
 end
 

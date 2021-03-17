@@ -6,7 +6,6 @@ close all
 % Classes chosen: 9 and 3
 load('characters10.mat');
 
-%imshow(reshape(train_data(2997,:), [28,28]));
 train_idx = find(train_label == 3 | train_label == 9);
 % 9(K) --> 1 and 3(R) --> 0
 TrLabel = train_label(train_idx);
@@ -14,7 +13,7 @@ TrLabel(TrLabel == 9) = 1;
 TrLabel(TrLabel == 3) = 0;
 
 train_x = train_data(train_idx, :);
-% casting to double to remove warning when normalizing data
+% normalizing train data
 train_x = mat2gray(train_x(:,:));
 
 test_idx = find(test_label == 3 | test_label == 9);
@@ -23,7 +22,7 @@ TeLabel(TeLabel == 9) = 1;
 TeLabel(TeLabel == 3) = 0;
 
 test_x = test_data(test_idx, :);
-% casting to double to remove warning when normalizing data
+% normalizing test data
 test_x = mat2gray(test_x(:,:));
 
 rng(3);

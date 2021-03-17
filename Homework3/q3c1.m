@@ -4,12 +4,13 @@ close all
 % Matric A0138993L
 % Classes chosen: 9 and 3
 load('characters10.mat');
+% set seed for reproducibility
 rng(234);
-%imshow(reshape(train_data(2997,:), [28,28]));
+
 train_idx = find(train_label ~= 3 & train_label ~= 9);
 TrLabel = train_label(train_idx);
 train_x = train_data(train_idx, :);
-% casting to double to remove warning when normalizing data
+% normalizing train data
 train_x = mat2gray(train_x(:,:))';
 
 T = 1000;
@@ -26,11 +27,8 @@ for n = 1:T
     %determine winner
     distance = squeeze(sum((train_x(:,i) - weights).^2,1))';
     [~,winner] = min(distance,[],'all','linear');
-    row = ceil(winner/10);
-    col = mod(winner,10);
-    if col == 0
-        col = 10;
-    end
+    [col, row] = ind2sub(size(distance), winner);
+    
     %get time-carying neighborhood function
     neuron_position = (1:10);
     d_j = (neuron_position - col).^2;

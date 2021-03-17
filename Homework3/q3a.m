@@ -7,7 +7,7 @@ x = linspace(-pi, pi, 400);
 train_x = [x; 2*sin(x)]; %2x400 matrix
 
 %SOM
-T = 600*36;
+T = 600;
 N = 1;
 M = 36;
 lr0 = 0.1;

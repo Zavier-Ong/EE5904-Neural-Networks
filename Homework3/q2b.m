@@ -14,7 +14,7 @@ TrLabel(TrLabel == 9) = 1;
 TrLabel(TrLabel == 3) = 0;
 
 train_x = train_data(train_idx, :);
-% casting to double to remove warning when normalizing data
+% normalizing train data
 train_x = mat2gray(train_x(:,:));
 
 test_idx = find(test_label == 3 | test_label == 9);
@@ -23,7 +23,7 @@ TeLabel(TeLabel == 9) = 1;
 TeLabel(TeLabel == 3) = 0;
 
 test_x = test_data(test_idx, :);
-% casting to double to remove warning when normalizing data
+% normalizing test data
 test_x = mat2gray(test_x(:,:));
 
 % randomly select 100 centers
@@ -69,7 +69,7 @@ for i = vary_width
     plot(thr, TrAcc, '-^r');
     plot(thr, TeAcc, '-xb');
     legend('Train','Test');
-    title(sprintf('Fixed Centers Selected at Random (lambda=%.3f)', i))
+    title(sprintf('Fixed Centers Selected at Random (width=%.3f)', i))
     saveas(fig,sprintf('q2b_lambda_%.3f.png',i))
     hold off
 end

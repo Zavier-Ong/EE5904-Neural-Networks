@@ -2,13 +2,13 @@ clc
 clear
 close all
 
-rng(3);
+rng(43)
 X = randn(800,2);
 s2 = sum(X.^2,2);
 train_x = (X.*repmat(1*(gammainc(s2/2,1).^(1/2))./sqrt(s2),1,2))';
 
 %SOM
-T = 36*600;
+T = 600;
 lr0 = 0.1;
 sigma0 = sqrt(6^2*6^2) / 2;
 tau = T / log(sigma0);
@@ -22,11 +22,8 @@ for n = 1:T
     %determine winner
     distance = squeeze(sum((train_x(:,i) - weights).^2,1))';
     [~,winner] = min(distance,[],'all','linear');
-    row = ceil(winner/6);
-    col = mod(winner,6);
-    if col == 0
-        col = 6;
-    end
+    [col, row] = ind2sub(size(distance), winner);
+    
     %get time-carying neighborhood function
     neuron_position = (1:6);
     d_j = (neuron_position - col).^2;
