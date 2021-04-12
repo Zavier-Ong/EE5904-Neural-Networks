@@ -14,7 +14,7 @@ strd_test = (test_data-mu)./sd;
 
 %checking for kernel suitability
 K = strd_train'*strd_train;
-svm_helper.check_mercer(K);
+isSuitable = svm_helper.check_mercer(K);
 
 %Hard margin C = 10e6
 C = 10e6;
@@ -41,6 +41,11 @@ bo = mean(boi);
 %Task 2 (Test set)
 train_acc = svm_helper.get_linear_kernel_acc(wo, bo, strd_train, train_label);
 test_acc = svm_helper.get_linear_kernel_acc(wo, bo, strd_test, test_label);
-fprintf('Train accuracy of hard-margin SVM with linear kernel: %.2f%%\n', train_acc*100);
-fprintf('Test accuracy of hard-margin SVM with linear kernel: %.2f%%\n', test_acc*100);
+if isSuitable
+    fprintf('Kernel candidate is admissible\n');
+else
+    fprintf('Kernel candidate is not admissible\n');
+end
+fprintf('Train accuracy of hard-margin SVM with linear kernel: %.2f%%\n', train_acc);
+fprintf('Test accuracy of hard-margin SVM with linear kernel: %.2f%%\n', test_acc);
 
