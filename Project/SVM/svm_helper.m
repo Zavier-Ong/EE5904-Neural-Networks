@@ -20,7 +20,16 @@ classdef svm_helper
             K = (train_data'*data+1).^p;
             adk_term = alpha.*train_label.*K;
             adK = sum(adk_term, 1)';
-            g = sign(adK +bo);
+            g = adK +bo;
+            pred_label = sign(g);
+            acc = mean(pred_label == label)*100;
+        end
+        
+        function [acc, pred_label] = get_rbf_kernel_acc(alpha, bo, gamma, train_data, train_label, data, label)
+            K = exp(-gamma*pdist2(train_data', data', 'squaredeuclidean'));
+            adk_term = alpha.*train_label.*K; 
+            adK = sum(adk_term)';
+            g = adK + bo;
             pred_label = sign(g);
             acc = mean(pred_label == label)*100;
         end
