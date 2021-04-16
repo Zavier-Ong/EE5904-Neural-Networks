@@ -3,6 +3,7 @@ clear
 
 load('train.mat')
 load('test.mat')
+load('eval.mat')
 
 %preprocessing
 %find mean of each row
@@ -11,12 +12,15 @@ sd = std(train_data, 0, 2);
 %standardization method
 strd_train = (train_data-mu)./sd;
 strd_test = (test_data-mu)./sd;
+strd_eval = (eval_data-mu)./sd;
+
 n_feat = size(strd_train, 1);
 
 gamma = [0.001, 0.01, 0.1, 1, 10];
 C = [0.001, 0.01, 0.1, 1, 10, 100];
 
-acc_list = zeros((size(C, 2)*size(gamma, 2)), 5);
+acc_list = zeros((size(C, 2)*size(gamma, 2)), 6);
+eval_pred_list = zeros((size(C,2)*size(gamma,2)), 600);
 size(acc_list)
 list_idx = 1;
 
@@ -50,7 +54,9 @@ for i = 1:size(C, 2)
         %Task 2 (Test set)
         [train_acc, train_predicted] = svm_helper.get_rbf_kernel_acc(alpha, bo, gamma(j), strd_train, train_label, strd_train, train_label);
         [test_acc, test_predicted] = svm_helper.get_rbf_kernel_acc(alpha, bo, gamma(j), strd_train, train_label, strd_test, test_label);
-        acc_list(list_idx,:) = [isSuitable gamma(j) C(i) train_acc test_acc];
+        [eval_acc, eval_predicted] = svm_helper.get_rbf_kernel_acc(alpha, bo, gamma(j), strd_train, train_label, strd_eval, eval_label);
+        acc_list(list_idx,:) = [isSuitable gamma(j) C(i) train_acc test_acc, eval_acc];
+        eval_pred_list(list_idx, :) = eval_predicted;
         list_idx = list_idx + 1;
     end
 end
@@ -61,11 +67,13 @@ for i=1:size(acc_list, 1)
     c = acc_list(i, 3);
     train_acc = acc_list(i, 4);
     test_acc = acc_list(i, 5);
+    eval_acc = acc_list(i, 6);
     if isSuitable
         fprintf('Kernel candidate is admissible\n');
     else
         fprintf('Kernel candidate is not admissible\n');
     end
     fprintf('Train accuracy of soft-margin SVM with RBF kernel (c=%.3f, gamma=%.3f): %.2f%%\n', c, gamma, train_acc);
-    fprintf('Test accuracy of soft-margin SVM with RBF kernel (c=%.3f, gamma=%.3f): %.2f%%\n\n', c, gamma, test_acc);
+    fprintf('Test accuracy of soft-margin SVM with RBF kernel (c=%.3f, gamma=%.3f): %.2f%%\n', c, gamma, test_acc);
+    fprintf('Test accuracy of soft-margin SVM with RBF kernel (c=%.3f, gamma=%.3f): %.2f%%\n\n', c, gamma, eval_acc);
 end
