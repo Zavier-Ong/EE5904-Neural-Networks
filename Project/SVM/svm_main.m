@@ -16,12 +16,15 @@ strd_eval = (eval_data-mu)./sd;
 
 n_feat = size(strd_train, 1);
 
-gamma = [0.001, 0.01, 0.1, 1, 10];
-C = [0.001, 0.01, 0.1, 1, 10, 100];
+%Testigng different parameters
+%gamma = [0.001, 0.01, 0.1, 1, 10];
+%C = [0.001, 0.01, 0.1, 1, 10, 100];
+%Finalized results
+gamma = (0.01);
+C = (10);
 
 acc_list = zeros((size(C, 2)*size(gamma, 2)), 6);
 eval_pred_list = zeros((size(C,2)*size(gamma,2)), 600);
-size(acc_list)
 list_idx = 1;
 
 for i = 1:size(C, 2)
@@ -75,5 +78,5 @@ for i=1:size(acc_list, 1)
     end
     fprintf('Train accuracy of soft-margin SVM with RBF kernel (c=%.3f, gamma=%.3f): %.2f%%\n', c, gamma, train_acc);
     fprintf('Test accuracy of soft-margin SVM with RBF kernel (c=%.3f, gamma=%.3f): %.2f%%\n', c, gamma, test_acc);
-    fprintf('Test accuracy of soft-margin SVM with RBF kernel (c=%.3f, gamma=%.3f): %.2f%%\n\n', c, gamma, eval_acc);
+    fprintf('Eval accuracy of soft-margin SVM with RBF kernel (c=%.3f, gamma=%.3f): %.2f%%\n\n', c, gamma, eval_acc);
 end
