@@ -44,6 +44,11 @@ for i = 1:size(C, 2)
         %discriminant function g(x)
         adk_term = alpha.*train_label.*K; 
         adK = sum(adk_term,1)';
+        if C(i) == 10e6
+            rng(3);
+            %choose only 1 support vector for hard margin
+            idx = idx(randperm(length(idx), 1));
+        end
         boi = train_label(idx) - adK(idx);
         bo = mean(boi);
 

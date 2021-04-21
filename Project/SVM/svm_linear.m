@@ -34,8 +34,11 @@ options = optimset('LargeScale','off','MaxIter', 1000);
 alpha = quadprog(H, f, A, b, Aeq, beq, lb, ub, x0, options);
 idx = find(alpha>1e-4);
 %discriminant function g(x)
+%hard margin chooses 1 support vector
+rng(3);
+chosen_sv_idx = idx(randperm(length(idx), 1));
 wo = sum(alpha'.*train_label'.*strd_train, 2);
-boi = 1./train_label(idx) - strd_train(:, idx)'*wo;
+boi = 1./train_label(chosen_sv_idx) - strd_train(:, chosen_sv_idx)'*wo;
 bo = mean(boi);
 
 %Task 2 (Test set)
